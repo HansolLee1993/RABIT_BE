@@ -1,0 +1,27 @@
+{
+  "name": "rabit_be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HansolLee1993/RABIT_BE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HansolLee1993/RABIT_BE/issues"
+  },
+  "homepage": "https://github.com/HansolLee1993/RABIT_BE#readme",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.810.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  }
+}
