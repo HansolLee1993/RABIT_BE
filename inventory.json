@@ -1,0 +1,23 @@
+[
+    { "make": "Toyota", "model": "Camry", "year": 2020 },
+    { "make": "Honda", "model": "Accord", "year": 2021 },
+    { "make": "Ford", "model": "Fusion", "year": 2019 },
+    { "make": "Chevrolet", "model": "Malibu", "year": 2020 },
+    { "make": "Nissan", "model": "Altima", "year": 2022 },
+    { "make": "BMW", "model": "3 Series", "year": 2020 },
+    { "make": "Audi", "model": "A4", "year": 2021 },
+    { "make": "Mercedes", "model": "C-Class", "year": 2020 },
+    { "make": "Tesla", "model": "Model 3", "year": 2022 },
+    { "make": "Hyundai", "model": "Sonata", "year": 2021 },
+    { "make": "Kia", "model": "Optima", "year": 2020 },
+    { "make": "Volkswagen", "model": "Passat", "year": 2022 },
+    { "make": "Mazda", "model": "Mazda6", "year": 2019 },
+    { "make": "Subaru", "model": "Legacy", "year": 2020 },
+    { "make": "Dodge", "model": "Charger", "year": 2021 },
+    { "make": "Chrysler", "model": "300", "year": 2020 },
+    { "make": "Buick", "model": "Regal", "year": 2020 },
+    { "make": "Lexus", "model": "ES", "year": 2022 },
+    { "make": "Infiniti", "model": "Q50", "year": 2021 },
+    { "make": "Acura", "model": "TLX", "year": 2020 }
+  ]
+  

@@ -6,6 +6,7 @@ const {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } = require("@aws-sdk/client-bedrock-runtime");
+const inventory = require('./inventory.json');
 
 dotenv.config();
 
@@ -48,6 +49,18 @@ app.post("/api/claude", async (req, res) => {
     // Send detailed error message in response
     res.status(500).json({ error: error.message || "Something went wrong" });
   }
+});
+
+app.get('/search', (req, res) => {
+  const { make, model, year } = req.query;
+
+  const filtered = inventory.filter(vehicle => {
+    return (!make || vehicle.make.toLowerCase() === make.toLowerCase()) &&
+           (!model || vehicle.model.toLowerCase() === model.toLowerCase()) &&
+           (!year || vehicle.year.toString() === year.toString());
+  });
+
+  res.json(filtered);
 });
 
 app.listen(port, () => {
