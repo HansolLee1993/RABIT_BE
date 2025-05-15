@@ -15,7 +15,7 @@ const client = new BedrockRuntimeClient({
 async function sendImageToClaude(base64Image) {
   try {
     const command = new InvokeModelCommand({
-      modelId: "anthropic.claude-3.5-sonnet",
+      modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
       contentType: "application/json",
       accept: "application/json",
       body: JSON.stringify({
@@ -35,7 +35,7 @@ async function sendImageToClaude(base64Image) {
               },
               {
                 type: "text",
-                text: "car",
+                text: 'Look at the image and return ONLY JSON like {"model":"...", "color":"...", "year":"..."} with no extra explanation.',
               },
             ],
           },
@@ -47,7 +47,18 @@ async function sendImageToClaude(base64Image) {
     const responseBody = new TextDecoder().decode(response.body);
     const json = JSON.parse(responseBody);
 
-    return { success: true, result: json.content };
+    const textResponse =
+      json.content && Array.isArray(json.content)
+        ? json.content.find((c) => c.type === "text")?.text
+        : null;
+
+    if (!textResponse) {
+      throw new Error("No text response from Claude");
+    }
+
+    const parsedJson = JSON.parse(textResponse);
+
+    return { success: true, result: parsedJson };
   } catch (error) {
     console.error("Claude error:", error);
     return { success: false, error: error.message || "Something went wrong" };

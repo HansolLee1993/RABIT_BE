@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const multer = require("multer");
-const { sendImageToClaude } = require("./claudeHandler");
 const inventory = require("./inventory.json");
 
 dotenv.config();
@@ -16,6 +15,7 @@ app.use(bodyParser.json());
 
 const upload = multer();
 
+const { sendImageToClaude } = require("./claudeHandler");
 app.post("/api/claude", upload.single("image"), async (req, res) => {
   try {
     const imageBuffer = req.file.buffer;
