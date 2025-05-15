@@ -2,11 +2,9 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const {
-  BedrockRuntimeClient,
-  InvokeModelCommand,
-} = require("@aws-sdk/client-bedrock-runtime");
-const inventory = require('./inventory.json');
+const multer = require("multer");
+const { sendImageToClaude } = require("./claudeHandler");
+const inventory = require("./inventory.json");
 
 dotenv.config();
 
@@ -16,53 +14,36 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(bodyParser.json());
 
-const client = new BedrockRuntimeClient({
-  region: "us-east-1", // Change if you're using a different region
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    sessionToken: process.env.AWS_SESSION_TOKEN,
-  },
-});
+const upload = multer();
 
-app.post("/api/claude", async (req, res) => {
-  const { prompt } = req.body;
-
-  const command = new InvokeModelCommand({
-    modelId: "anthropic.claude-3.5-sonnet",
-    contentType: "application/json",
-    accept: "application/json",
-    body: JSON.stringify({
-      prompt: `Human: ${prompt}\nAssistant:`,
-      max_tokens_to_sample: 300,
-    }),
-  });
-
+app.post("/api/claude", upload.single("image"), async (req, res) => {
   try {
-    const response = await client.send(command);
-    const responseBody = new TextDecoder().decode(response.body);
-    const json = JSON.parse(responseBody);
-    res.json({ completion: json.completion });
+    const imageBuffer = req.file.buffer;
+    const base64Image = imageBuffer.toString("base64");
+
+    const result = await sendImageToClaude(base64Image);
+
+    res.json(result);
   } catch (error) {
-    // Log full error to console for debugging
-    console.error("Full Bedrock error:", error);
-    // Send detailed error message in response
-    res.status(500).json({ error: error.message || "Something went wrong" });
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
 
-app.get('/search', (req, res) => {
+app.get("/search", (req, res) => {
   const { make, model, year } = req.query;
 
-  const filtered = inventory.filter(vehicle => {
-    return (!make || vehicle.make.toLowerCase() === make.toLowerCase()) &&
-           (!model || vehicle.model.toLowerCase() === model.toLowerCase()) &&
-           (!year || vehicle.year.toString() === year.toString());
+  const filtered = inventory.filter((vehicle) => {
+    return (
+      (!make || vehicle.make.toLowerCase() === make.toLowerCase()) &&
+      (!model || vehicle.model.toLowerCase() === model.toLowerCase()) &&
+      (!year || vehicle.year.toString() === year.toString())
+    );
   });
 
   res.json(filtered);
 });
 
 app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
+  console.log(`:rocket: Server running on http://localhost:${port}`);
 });
