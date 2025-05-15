@@ -12,7 +12,15 @@ const client = new BedrockRuntimeClient({
   },
 });
 
+function detectImageMediaType(base64) {
+  if (base64.startsWith("/9j/")) return "image/jpeg";
+  if (base64.startsWith("iVBOR")) return "image/png";
+  throw new Error("Unsupported image format");
+}
+
 async function sendImageToClaude(base64Image) {
+  const mediaType = detectImageMediaType(base64Image);
+
   try {
     const command = new InvokeModelCommand({
       modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
@@ -29,7 +37,7 @@ async function sendImageToClaude(base64Image) {
                 type: "image",
                 source: {
                   type: "base64",
-                  media_type: "image/jpeg",
+                  media_type: mediaType,
                   data: base64Image,
                 },
               },
