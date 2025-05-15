@@ -35,7 +35,7 @@ async function sendImageToClaude(base64Image) {
               },
               {
                 type: "text",
-                text: 'Look at the image and return ONLY JSON like {"model":"...", "color":"...", "year":"..."} with no extra explanation.',
+                text: 'Look at the image and return ONLY JSON like {"model":"...", "make":"...", "year":"..."} with no extra explanation.',
               },
             ],
           },
