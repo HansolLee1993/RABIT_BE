@@ -37,17 +37,11 @@ app.get("/api/search", (req, res) => {
   const model = req.query.model || req.query.Model;
   const year = req.query.year || req.query.Year;
 
-  if (!make || !model || !year) {
-    return res
-      .status(400)
-      .json({ error: "make, model, and year are required" });
-  }
-
   const filtered = inventory.filter((vehicle) => {
     return (
-      vehicle.make.toLowerCase() === make.toLowerCase() &&
-      vehicle.model.toLowerCase() === model.toLowerCase() &&
-      vehicle.year.toString() === year.toString()
+      (!make || vehicle.make.toLowerCase() === make.toLowerCase()) &&
+      (!model || vehicle.model.toLowerCase() === model.toLowerCase()) &&
+      (!year || vehicle.year.toString() === year.toString())
     );
   });
 
