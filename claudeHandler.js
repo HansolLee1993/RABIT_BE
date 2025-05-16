@@ -59,7 +59,7 @@ function extractTextFromClaudeResponse(json) {
 
 function isValidCarData(data) {
   return (
-    data && typeof data === "object" && data.model && data.make && data.year
+    data && typeof data === "object" && (data.model || data.make || data.year)
   );
 }
 
