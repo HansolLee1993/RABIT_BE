@@ -30,18 +30,39 @@ app.post("/api/claude", upload.single("image"), async (req, res) => {
   }
 });
 
-app.get("/search", (req, res) => {
-  const { make, model, year } = req.query;
+app.get("/api/search", (req, res) => {
+  console.log("Search endpoint hit with query:", req.query);
+
+  const make = req.query.make || req.query.Make;
+  const model = req.query.model || req.query.Model;
+  const year = req.query.year || req.query.Year;
+
+  if (!make || !model || !year) {
+    return res
+      .status(400)
+      .json({ error: "make, model, and year are required" });
+  }
 
   const filtered = inventory.filter((vehicle) => {
     return (
-      (!make || vehicle.make.toLowerCase() === make.toLowerCase()) &&
-      (!model || vehicle.model.toLowerCase() === model.toLowerCase()) &&
-      (!year || vehicle.year.toString() === year.toString())
+      vehicle.make.toLowerCase() === make.toLowerCase() &&
+      vehicle.model.toLowerCase() === model.toLowerCase() &&
+      vehicle.year.toString() === year.toString()
     );
   });
 
-  res.json(filtered);
+  const result = filtered.map(
+    ({ dealer, price, image_url, make, model, year }) => ({
+      dealer,
+      price,
+      image_url,
+      make,
+      model,
+      year,
+    })
+  );
+
+  res.json(result);
 });
 
 app.listen(port, () => {
